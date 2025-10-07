@@ -63,6 +63,7 @@ export default function DashboardPage() {
           { text: "置顶/检查 CTA", done: false },
         ],
         lead_count: 0,
+        goal: { tweets: 2, interactions: 20 }
       }
     }
     // 确保goal存在
@@ -104,10 +105,10 @@ export default function DashboardPage() {
     })
 
     return recentDrafts.filter((d) => {
-      if (d.isViralAttempt) return true
+      if (d.is_viral_attempt) return true
       const metric = metrics.find((m) => m.draft_id === d.id)
       if (!metric) return false
-      const isViralCategory = d.templateId?.includes("case") || d.templateId?.includes("tools")
+      const isViralCategory = d.template_id?.includes("case") || d.template_id?.includes("tools")
       return isViralCategory && metric.impressions > 10000
     }).length
   }, [drafts, metrics])

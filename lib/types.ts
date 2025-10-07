@@ -14,6 +14,7 @@ export interface Draft {
   created_at?: string
   idea_id?: string
   template_id?: string
+  is_viral_attempt?: boolean
 }
 
 export interface Metric {
