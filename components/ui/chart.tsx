@@ -104,9 +104,10 @@ ${colorConfig
 
 const ChartTooltip = RechartsPrimitive.Tooltip
 
+// @ts-ignore - recharts类型推断问题
 function ChartTooltipContent({
   active,
-  payload,
+  payload = [],
   className,
   indicator = 'dot',
   hideLabel = false,
