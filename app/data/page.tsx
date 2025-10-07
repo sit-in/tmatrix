@@ -3,7 +3,8 @@
 import type React from "react"
 
 import { useState, useMemo } from "react"
-import { useStore, generateId, calculateEngagementRate, type Metric } from "@/lib/store"
+import { useStore, generateId, calculateEngagementRate } from "@/lib/store-supabase"
+import type { Metric } from "@/lib/types"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -66,8 +67,8 @@ export default function DataPage() {
 
     // 排序
     filtered.sort((a, b) => {
-      const aVal = a[sortField]
-      const bVal = b[sortField]
+      const aVal = a[sortField] ?? 0
+      const bVal = b[sortField] ?? 0
       const comparison = aVal > bVal ? 1 : aVal < bVal ? -1 : 0
       return sortOrder === "asc" ? comparison : -comparison
     })
@@ -91,15 +92,15 @@ export default function DataPage() {
 
     const metric: Metric = {
       id: generateId("metric"),
-      draftId: selectedDraft,
+      draft_id: selectedDraft,
       date: metricDate,
       impressions: impressionsNum,
       likes: likesNum,
       replies: repliesNum,
       reposts: repostsNum,
       bookmarks: bookmarksNum,
-      linkClicks: linkClicksNum,
-      estFollows: calculatedEstFollows,
+      link_clicks: linkClicksNum,
+      est_follows: calculatedEstFollows,
     }
 
     addMetric(metric)
@@ -132,20 +133,20 @@ export default function DataPage() {
       "新增关注",
     ]
     const rows = filteredMetrics.map((m) => {
-      const draft = drafts.find((d) => d.id === m.draftId)
+      const draft = drafts.find((d) => d.id === m.draft_id)
       const variant = draft ? `${draft.lang.toUpperCase()}-${draft.variant}` : "未知"
       return [
         m.date,
-        m.draftId,
+        m.draft_id,
         variant,
         m.impressions,
         m.likes,
         m.replies,
         m.reposts,
         m.bookmarks,
-        m.linkClicks,
+        m.link_clicks,
         calculateEngagementRate(m).toFixed(2),
-        m.estFollows,
+        m.est_follows,
       ]
     })
 
@@ -176,15 +177,15 @@ export default function DataPage() {
 
         const metric: Metric = {
           id: generateId("metric"),
-          draftId: draftId.trim(),
+          draft_id: draftId.trim(),
           date: date.trim(),
           impressions: Number.parseInt(impressions),
           likes: Number.parseInt(likes),
           replies: Number.parseInt(replies),
           reposts: Number.parseInt(reposts),
           bookmarks: Number.parseInt(bookmarks),
-          linkClicks: Number.parseInt(linkClicks),
-          estFollows: Number.parseInt(estFollows),
+          link_clicks: Number.parseInt(linkClicks),
+          est_follows: Number.parseInt(estFollows),
         }
 
         addMetric(metric)
@@ -237,13 +238,13 @@ export default function DataPage() {
     const categoryMap = new Map<string, number>()
 
     metrics.forEach((m) => {
-      const draft = drafts.find((d) => d.id === m.draftId)
+      const draft = drafts.find((d) => d.id === m.draft_id)
       if (!draft) return
 
-      const template = templates.find((t) => t.id === draft.templateId)
+      const template = templates.find((t) => t.id === draft.template_id)
       const category = template?.category || "未知"
 
-      categoryMap.set(category, (categoryMap.get(category) || 0) + m.estFollows)
+      categoryMap.set(category, (categoryMap.get(category) || 0) + m.est_follows)
     })
 
     return Array.from(categoryMap.entries()).map(([name, value]) => ({
@@ -448,7 +449,7 @@ export default function DataPage() {
               </thead>
               <tbody>
                 {filteredMetrics.map((metric) => {
-                  const draft = drafts.find((d) => d.id === metric.draftId)
+                  const draft = drafts.find((d) => d.id === metric.draft_id)
                   const engagementRate = calculateEngagementRate(metric)
 
                   return (
@@ -464,9 +465,9 @@ export default function DataPage() {
                       <td className="py-3 text-sm">{metric.replies}</td>
                       <td className="py-3 text-sm">{metric.reposts}</td>
                       <td className="py-3 text-sm">{metric.bookmarks}</td>
-                      <td className="py-3 text-sm">{metric.linkClicks}</td>
+                      <td className="py-3 text-sm">{metric.link_clicks}</td>
                       <td className="py-3 text-sm font-medium">{engagementRate.toFixed(2)}%</td>
-                      <td className="py-3 text-sm font-medium">+{metric.estFollows}</td>
+                      <td className="py-3 text-sm font-medium">+{metric.est_follows}</td>
                     </tr>
                   )
                 })}
@@ -524,7 +525,7 @@ export default function DataPage() {
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  label={({ name, percent }: any) => `${name} ${(percent * 100).toFixed(0)}%`}
                   outerRadius={80}
                   fill="#8884d8"
                   dataKey="value"

@@ -9,18 +9,40 @@
 
 ---
 
+## 🚨 **当前状态: 单用户MVP v0.2.0**
+
+> **重要说明**: 这是一个**单用户MVP版本**，专注于核心功能的稳定实现。
+>
+> ✅ **已实现**: Dashboard展示、Supabase数据持久化、手动数据录入
+> ⏸️ **暂不支持**: 多用户、AI生成、Twitter API自动同步
+>
+> 📖 完整部署指南: [DEPLOY.md](DEPLOY.md)
+
+---
+
 ## 📖 项目简介
 
 TMatrix Lite 是一个为 Twitter 矩阵运营设计的内容管理和数据分析工具，帮助你系统化地管理 Twitter 账号，实现数据驱动的增长。
 
-### 核心功能
+**当前版本特点**：
+- ✅ 干净的代码架构（移除技术债）
+- ✅ 统一的命名规范（snake_case与数据库一致）
+- ✅ 完整的类型定义（TypeScript严格模式）
+- ✅ Supabase数据持久化（告别LocalStorage）
+
+### 核心功能（当前版本）
 
 - 📊 **数据看板**: KPI追踪、趋势分析、Top推文展示
-- ✍️ **内容管理**: Idea收集、模板化创作、A/B/EN变体生成
-- 📈 **数据追踪**: 推文指标录入、Twitter API自动同步
+- ✍️ **内容管理**: Idea收集、草稿创建、状态管理
+- 📈 **数据追踪**: 手动录入推文指标、CSV批量导入
+- ⏰ **每日清单**: 任务管理、微信引流计数
+
+### 计划中功能（未来版本）
+
 - 🤖 **AI辅助**: OpenAI/Claude驱动的内容生成
-- ⏰ **每日清单**: 任务管理、进度追踪
-- 🔐 **多用户**: Supabase认证、数据隔离
+- 🔄 **Twitter API**: 自动同步推文数据
+- 🔐 **多用户**: 用户认证、数据隔离
+- 🎨 **UI优化**: Toast提示、Loading状态
 
 ### 技术栈
 
@@ -91,8 +113,10 @@ CRON_SECRET=random-secret-string
 
 1. 登录 [Supabase Dashboard](https://supabase.com/dashboard)
 2. 创建新项目
-3. 在 SQL Editor 运行 `lib/supabase/migrations/001_initial_schema.sql`
+3. 在 SQL Editor 运行 `lib/supabase/schema-single-user.sql`
 4. 复制 API keys 到 `.env.local`
+
+> 💡 **提示**: 详细的数据库设置和部署步骤请查看 [DEPLOY.md](DEPLOY.md)
 
 ---
 
@@ -367,22 +391,28 @@ Copyright (c) 2025 @sitinme
 
 ## ⚠️ 当前限制
 
-### 原型阶段 (v0.1.0)
-
-- ✅ 基础功能可用
-- ⚠️ 数据存储在 LocalStorage（清缓存会丢失）
-- ⚠️ 单用户使用
-- ⚠️ 需手动录入数据
-- ❌ 无 AI 功能
-- ❌ 无 Twitter API 集成
-
-### 升级后 (v1.0.0)
+### 单用户MVP (v0.2.0) - 当前版本
 
 - ✅ 数据永久存储 (Supabase)
-- ✅ 多用户支持
-- ✅ 80% 数据自动化
-- ✅ AI 内容生成
-- ✅ Twitter API 集成
+- ✅ 基础功能稳定可用
+- ✅ 代码架构清晰
+- ⚠️ **单用户使用**（所有人看到同一份数据）
+- ⚠️ 需手动录入数据
+- ❌ 无用户认证
+- ❌ 无 AI 功能
+- ❌ 无 Twitter API 集成
+- ❌ 无错误Toast提示
+
+### 未来版本规划 (v1.0.0)
+
+- 🔄 多用户支持 + 用户认证
+- 🔄 AI 内容生成（OpenAI/Claude）
+- 🔄 Twitter API 自动同步
+- 🔄 错误处理和用户反馈
+- 🔄 性能优化和缓存
+- 🔄 完整的E2E测试
+
+> 💡 **升级路线**: 查看 [docs/UPGRADE_PLAN.md](docs/UPGRADE_PLAN.md) 了解完整升级计划
 
 ---
 

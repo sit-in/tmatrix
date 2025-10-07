@@ -1,7 +1,8 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import { useStore, generateId, type Template, type Idea, type Draft } from "@/lib/store"
+import { useStore, generateId } from "@/lib/store-supabase"
+import type { Template, Idea, Draft } from "@/lib/types"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -41,8 +42,8 @@ export default function ContentPage() {
       filtered = drafts.filter((d) => d.status === activeTab)
     }
     return filtered.sort((a, b) => {
-      const dateA = a.postedAt || a.scheduledAt || ""
-      const dateB = b.postedAt || b.scheduledAt || ""
+      const dateA = a.posted_at || a.created_at || ""
+      const dateB = b.posted_at || b.created_at || ""
       return dateB.localeCompare(dateA)
     })
   }, [drafts, activeTab])
@@ -63,13 +64,13 @@ export default function ContentPage() {
 
     const idea: Idea = {
       id: generateId("idea"),
-      sourceType: newIdeaType,
+      source_type: newIdeaType,
       source: newIdeaSource,
       tags: newIdeaTags
         .split(",")
         .map((t) => t.trim())
         .filter(Boolean),
-      createdAt: format(new Date(), "yyyy-MM-dd"),
+      created_at: format(new Date(), "yyyy-MM-dd"),
     }
 
     addIdea(idea)
@@ -81,7 +82,7 @@ export default function ContentPage() {
   const handleUseIdea = (idea: Idea) => {
     const draft: Draft = {
       id: generateId("draft"),
-      ideaId: idea.id,
+      idea_id: idea.id,
       lang: "zh",
       variant: "A",
       content: idea.source,
@@ -106,7 +107,7 @@ export default function ContentPage() {
     variants.forEach((v) => {
       const draft: Draft = {
         id: generateId("draft"),
-        templateId: template.id,
+        template_id: template.id,
         lang: v.lang,
         variant: v.variant,
         content: v.content,
@@ -264,7 +265,7 @@ export default function ContentPage() {
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-xs text-muted-foreground">
-                        {format(new Date(idea.createdAt), "MM/dd", { locale: zhCN })}
+                        {format(new Date(idea.created_at!), "MM/dd", { locale: zhCN })}
                       </span>
                       <div className="flex gap-1">
                         <Button size="sm" variant="ghost" onClick={() => handleUseIdea(idea)}>
@@ -410,10 +411,10 @@ export default function ContentPage() {
 
                       <p className="text-sm line-clamp-3">{draft.content}</p>
 
-                      {(draft.scheduledAt || draft.postedAt) && (
+                      {(draft.created_at || draft.posted_at) && (
                         <div className="flex items-center gap-1 text-xs text-muted-foreground">
                           <Calendar className="h-3 w-3" />
-                          {format(new Date(draft.postedAt || draft.scheduledAt!), "MM/dd HH:mm", { locale: zhCN })}
+                          {format(new Date(draft.posted_at || draft.created_at!), "MM/dd HH:mm", { locale: zhCN })}
                         </div>
                       )}
 
